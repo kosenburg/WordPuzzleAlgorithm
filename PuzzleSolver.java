@@ -48,7 +48,6 @@ public class PuzzleSolver {
     private void searchAroundPoint() {
         for (Direction direction: Direction.values()) {
             String foundWord = lookForAWord(direction);
-
             if (wordList.wordMatches(foundWord)) {
                 foundWords.put(foundWord, checkedPoints);
             } else {
@@ -97,7 +96,7 @@ public class PuzzleSolver {
             for (String word: foundWords.keySet()) {
                 line.append(word + ": ");
                 for(Point point: foundWords.get(word)) {
-                    line.append(point + " ");
+                    line.append("(" + point.getX() + ", " + point.getY() + ")" + " ");
                 }
                 writer.println(line.toString());
                 line = new StringBuilder();
