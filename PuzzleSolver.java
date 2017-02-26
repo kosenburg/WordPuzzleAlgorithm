@@ -10,6 +10,7 @@ public class PuzzleSolver {
     private Direction direction;
     private HashMap<String, ArrayList<Point>> foundWords;
     private Point startingPoint;
+    private ArrayList<Point> checkedPoints;
 
     public PuzzleSolver() {
         startingPoint = new Point(-1,0);
@@ -41,13 +42,19 @@ public class PuzzleSolver {
 
     private void searchAroundPoint() {
         for (Direction direction: Direction.values()) {
-            lookForWord(direction);
+            String foundWord = lookForAWord(direction);
+
+            if (wordList.wordMatches(foundWord)) {
+                foundWords.put(foundWord, checkedPoints);
+            } else {
+                checkedPoints = null;
+            }
         }
     }
 
-    private void lookForWord(Direction direction) {
-        ArrayList<Point> checkedPoints = new ArrayList<>();
-        StringBuffer cumulatingWord = new StringBuffer();
+    private String lookForAWord(Direction direction) {
+        checkedPoints = new ArrayList<>();
+        StringBuilder cumulatingWord = new StringBuilder();
 
         Point point = new Point(startingPoint.getX(),startingPoint.getY());
 
@@ -56,10 +63,10 @@ public class PuzzleSolver {
 
         while (wordList.contains(cumulatingWord.toString())) {
             point = point.moveIn(direction);
-            if (!grid.isInBounds(point)) break;
+            if (!grid.isInBounds(point)) return cumulatingWord.toString();
             cumulatingWord.append(grid.getLetterAt(point));
         }
-
+        return cumulatingWord.deleteCharAt(cumulatingWord.length() - 1).toString();
     }
 
     private void selectAPoint() {

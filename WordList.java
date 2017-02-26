@@ -51,4 +51,5 @@ public class WordList {
     public int size() {
         return wordList.size();
     }
+
 }
