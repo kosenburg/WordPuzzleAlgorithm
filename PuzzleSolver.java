@@ -1,7 +1,5 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +7,7 @@ import java.util.HashMap;
  * Created by Kevin on 2/26/2017.
  */
 public class PuzzleSolver {
-    private Grid grid;
+    private Grid loadedPuzzleGrid;
     private WordList wordList;
     private Direction direction;
     private HashMap<String, ArrayList<Point>> foundWords;
@@ -27,7 +25,7 @@ public class PuzzleSolver {
     }
 
     private void createGrid(String wordPuzzlePath) {
-        grid = new Grid(wordPuzzlePath);
+        loadedPuzzleGrid = new Grid(wordPuzzlePath);
     }
 
     private void createWordList(String wordListPath) {
@@ -62,14 +60,14 @@ public class PuzzleSolver {
 
         Point point = new Point(startingPoint.getX(),startingPoint.getY());
 
-        cumulatingWord.append(grid.getLetterAt(point));
+        cumulatingWord.append(loadedPuzzleGrid.getLetterAt(point));
         checkedPoints.add(point);
 
         while (wordList.contains(cumulatingWord.toString())) {
             point = point.moveIn(direction);
-            if (!grid.isInBounds(point)) return cumulatingWord.toString();
+            if (!loadedPuzzleGrid.isInBounds(point)) return cumulatingWord.toString();
             checkedPoints.add(point);
-            cumulatingWord.append(grid.getLetterAt(point));
+            cumulatingWord.append(loadedPuzzleGrid.getLetterAt(point));
         }
 
         // fence post issue
@@ -78,12 +76,12 @@ public class PuzzleSolver {
     }
 
     private void selectAPoint() {
-        if (startingPoint.getX() + 1 < grid.RowSize(startingPoint.getY())) {
+        if (startingPoint.getX() + 1 < loadedPuzzleGrid.RowSize(startingPoint.getY())) {
             startingPoint = new Point(startingPoint.getX() + 1, startingPoint.getY());
-        } else if (startingPoint.getY() + 1 < grid.ColSize(startingPoint.getX())) {
+        } else if (startingPoint.getY() + 1 < loadedPuzzleGrid.ColSize(startingPoint.getX())) {
             startingPoint = new Point(0, startingPoint.getY() + 1);
         } else {
-            System.out.println("Out of grid points, exiting...");
+            System.out.println("Out of loadedPuzzleGrid points, exiting...");
             System.exit(0);
         }
     }
@@ -107,8 +105,6 @@ public class PuzzleSolver {
         }
     }
 
-
-
     public void outputAnswerGrid() {
         try {
             PrintWriter writer = new PrintWriter("PuzzleWords.txt", "UTF-8");
@@ -123,10 +119,10 @@ public class PuzzleSolver {
     }
 
     private Grid createAnswerGrid() {
-        Grid answerGrid = new Grid(50,50);
+        Grid answerGrid = new Grid(loadedPuzzleGrid.ColSize(),loadedPuzzleGrid.RowSize(0));
         for (String word: foundWords.keySet()) {
             for (Point p: foundWords.get(word)) {
-                answerGrid.addToGrid(p, grid.getLetterAt(p));
+                answerGrid.addToGrid(p, loadedPuzzleGrid.getLetterAt(p));
             }
         }
         return answerGrid;
