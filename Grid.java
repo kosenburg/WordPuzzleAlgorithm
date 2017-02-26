@@ -9,12 +9,26 @@ import java.util.ArrayList;
  */
 public class Grid {
     private ArrayList<String> wordGrid;
-    private final String wordPuzzlePath;
+    private String wordPuzzlePath;
+    private char[][] characterGrid;
 
     public Grid(String wordPuzzlePath) {
         wordGrid = new ArrayList<>();
         this.wordPuzzlePath = wordPuzzlePath;
         loadWordFile();
+    }
+
+    public Grid (int numberRows, int numberCols) {
+        characterGrid = new char[numberCols][numberRows];
+
+    }
+
+    public void addToGrid(Point p, char character) {
+        characterGrid[p.getY()][p.getX()] = character;
+    }
+
+    public char[][] getCharacterGrid() {
+        return characterGrid;
     }
 
     private void loadWordFile() {

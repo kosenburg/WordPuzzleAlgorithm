@@ -96,15 +96,50 @@ public class PuzzleSolver {
 
             for (String word: foundWords.keySet()) {
                 line.append(word + ": ");
-                /*for(Point point: foundWords.get(word)) {
+                for(Point point: foundWords.get(word)) {
                     line.append(point + " ");
-                }*/
+                }
                 writer.println(line.toString());
+                line = new StringBuilder();
             }
             writer.close();
         } catch (IOException e) {
             System.err.println("Issue writing to file: " + e.getMessage());
         }
+    }
+
+    public void outputAnswerGrid() {
+        try {
+            PrintWriter writer = new PrintWriter("PuzzleWords.txt", "UTF-8");
+            Grid outputGrid = getAnswerGrid();
+            StringBuilder line = new StringBuilder();
+            char[][] gridArray = outputGrid.getCharacterGrid();
+            for (int i = 0; i < gridArray.length; i++) {
+                for (int j = 0; j < gridArray[0].length; j++) {
+                    if (gridArray[i][j] == 0) {
+                        line.append(" ");
+                    } else {
+                        line.append(gridArray[i][j]);
+                    }
+                }
+                //System.out.println(line.toString());
+                writer.println(line.toString());
+                line = new StringBuilder();
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private Grid getAnswerGrid() {
+        Grid outputGrid = new Grid(50,50);
+        for (String word: foundWords.keySet()) {
+            for (Point p: foundWords.get(word)) {
+                outputGrid.addToGrid(p, grid.getLetterAt(p));
+            }
+        }
+        return outputGrid;
     }
 
 }

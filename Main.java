@@ -5,6 +5,7 @@ public class Main {
         solver.loadWordFindPuzzle("C:\\Users\\Kevin\\IdeaProjects\\ProgrammingAssignment2\\Files\\puzzleinput.txt", "C:\\Users\\Kevin\\IdeaProjects\\ProgrammingAssignment2\\Files\\wordlist.txt");
         solver.solve();
         solver.outputSolution();
+        solver.outputAnswerGrid();
 
     }
 }
