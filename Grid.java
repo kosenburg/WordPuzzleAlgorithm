@@ -50,8 +50,8 @@ public class Grid {
     }
 
     public boolean isInBounds(Point point) {
-        if (point.getY() < ColSize(point.getX())) {
-            if (point.getX() < RowSize(point.getY())) {
+        if ((point.getY() < ColSize(point.getX())) && (point.getY() >= 0)) {
+            if ((point.getX() < RowSize(point.getY())) && (point.getX() >= 0)) {
                 return true;
             }
         }

@@ -1,3 +1,7 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -82,6 +86,24 @@ public class PuzzleSolver {
         } else {
             System.out.println("Out of grid points, exiting...");
             System.exit(0);
+        }
+    }
+
+    public void outputSolution() {
+        try{
+            PrintWriter writer = new PrintWriter("FoundWords.txt", "UTF-8");
+            StringBuilder line = new StringBuilder();
+
+            for (String word: foundWords.keySet()) {
+                line.append(word + ": ");
+                /*for(Point point: foundWords.get(word)) {
+                    line.append(point + " ");
+                }*/
+                writer.println(line.toString());
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Issue writing to file: " + e.getMessage());
         }
     }
 
