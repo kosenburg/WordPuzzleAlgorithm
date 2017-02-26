@@ -11,6 +11,7 @@ public class Grid {
     private ArrayList<String> wordGrid;
     private String wordPuzzlePath;
     private char[][] characterGrid;
+    private boolean isEditable = true;
 
     public Grid(String wordPuzzlePath) {
         wordGrid = new ArrayList<>();
@@ -19,17 +20,41 @@ public class Grid {
     }
 
     public Grid (int numberRows, int numberCols) {
-        characterGrid = new char[numberCols][numberRows];
+        wordGrid = new ArrayList<>();
+        createEmptyGrid(numberRows, numberCols);
 
+    }
+
+    private void createEmptyGrid(int numberRows, int numberCols) {
+        StringBuilder builder;
+        for (int i = 0; i < numberRows; i++) {
+            builder = new StringBuilder();
+            for (int j = 0; j < numberCols; j++) {
+                builder.append(" ");
+            }
+            wordGrid.add(builder.toString());
+        }
     }
 
     public void addToGrid(Point p, char character) {
-        characterGrid[p.getY()][p.getX()] = character;
+        if (isEditable) {
+            String row = wordGrid.get(p.getY());
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < row.length(); i++) {
+                if (i == p.getX()) {
+                    builder.append(character);
+                } else {
+                    builder.append(row.charAt(i));
+                }
+            }
+            wordGrid.add(p.getY(), builder.toString());
+            wordGrid.remove(p.getY() + 1);
+        } else {
+            System.out.println("Grid object is not editable");
+        }
     }
 
-    public char[][] getCharacterGrid() {
-        return characterGrid;
-    }
 
     private void loadWordFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(wordPuzzlePath))) {
@@ -37,6 +62,7 @@ public class Grid {
             while(((line = br.readLine()) != null) && !line.equals("")) {
                 wordGrid.add(line);
             }
+            isEditable = false;
         } catch (FileNotFoundException e) {
             System.err.println("Unable to locate file: " + wordPuzzlePath);
         } catch (IOException e) {
@@ -72,19 +98,11 @@ public class Grid {
         return false;
     }
 
-    public void outputRows() {
-        int i = 0;
-        for (String line: wordGrid) {
-            i++;
-            System.out.println(line);
-        }
-        System.out.println(i);
+    public String getRow(int y) {
+        return wordGrid.get(y);
     }
-    public void outputLine(int index) {
-        String line = wordGrid.get(index);
-        for (int i = 0; i < line.length(); i++) {
-            System.out.println(line.charAt(i));
-        }
-        System.out.println(line.length());
+
+    public int ColSize() {
+        return wordGrid.size();
     }
 }

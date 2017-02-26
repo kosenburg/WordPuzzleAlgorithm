@@ -108,23 +108,14 @@ public class PuzzleSolver {
         }
     }
 
+
+
     public void outputAnswerGrid() {
         try {
             PrintWriter writer = new PrintWriter("PuzzleWords.txt", "UTF-8");
-            Grid outputGrid = getAnswerGrid();
-            StringBuilder line = new StringBuilder();
-            char[][] gridArray = outputGrid.getCharacterGrid();
-            for (int i = 0; i < gridArray.length; i++) {
-                for (int j = 0; j < gridArray[0].length; j++) {
-                    if (gridArray[i][j] == 0) {
-                        line.append(" ");
-                    } else {
-                        line.append(gridArray[i][j]);
-                    }
-                }
-                //System.out.println(line.toString());
-                writer.println(line.toString());
-                line = new StringBuilder();
+            Grid answerGrid = createAnswerGrid();
+            for (int i = 0; i < answerGrid.ColSize(); i++) {
+                writer.println(answerGrid.getRow(i));
             }
             writer.close();
         } catch (IOException e) {
@@ -132,14 +123,14 @@ public class PuzzleSolver {
         }
     }
 
-    private Grid getAnswerGrid() {
-        Grid outputGrid = new Grid(50,50);
+    private Grid createAnswerGrid() {
+        Grid answerGrid = new Grid(50,50);
         for (String word: foundWords.keySet()) {
             for (Point p: foundWords.get(word)) {
-                outputGrid.addToGrid(p, grid.getLetterAt(p));
+                answerGrid.addToGrid(p, grid.getLetterAt(p));
             }
         }
-        return outputGrid;
+        return answerGrid;
     }
 
 }
