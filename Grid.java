@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class Grid {
     private ArrayList<String> wordGrid;
     private String wordPuzzlePath;
-    private char[][] characterGrid;
     private boolean isEditable = true;
 
     public Grid(String wordPuzzlePath) {
@@ -22,7 +21,6 @@ public class Grid {
     public Grid (int numberRows, int numberCols) {
         wordGrid = new ArrayList<>();
         createEmptyGrid(numberRows, numberCols);
-
     }
 
     private void createEmptyGrid(int numberRows, int numberCols) {
