@@ -1,3 +1,10 @@
+/**
+ * Puzzle solver maintains two grid objects, one is the loadedPuzzleGrid and the other is a solution grid.
+ * The solver also maintains a WordList object to compare words against as well as point objects that represent
+ * coordinates on the grid. Lastly, an array of checked points is used to keep track of where the letters are
+ * found while currently searching in a given direction.
+ */
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -9,7 +16,6 @@ import java.util.HashMap;
 public class PuzzleSolver {
     private Grid loadedPuzzleGrid;
     private WordList wordList;
-    private Direction direction;
     private HashMap<String, ArrayList<Point>> foundWords;
     private Point startingPoint;
     private ArrayList<Point> checkedPoints;
@@ -19,6 +25,7 @@ public class PuzzleSolver {
         foundWords = new HashMap<>();
     }
 
+    // Loads the puzzle and word list into their respective objects
     public void loadWordFindPuzzle(String wordPuzzlePath, String wordListPath) {
         createGrid(wordPuzzlePath);
         createWordList(wordListPath);
@@ -36,6 +43,7 @@ public class PuzzleSolver {
         startSearch();
     }
 
+    // Only keeps searching until the number of words found is the same as on the list.
     private void startSearch() {
         while (foundWords.keySet().size() != wordList.size()) {
             selectAPoint();
@@ -43,6 +51,7 @@ public class PuzzleSolver {
         }
     }
 
+    // After a start point is selected, we look for words around the point by moving in each direction
     private void searchAroundPoint() {
         for (Direction direction: Direction.values()) {
             String foundWord = lookForAWord(direction);
@@ -54,6 +63,8 @@ public class PuzzleSolver {
         }
     }
 
+    // With a direction selected, we keep moving in that direction and comparing the increasing word to the
+    // word list looking for a match. We stop when the word matches non in the list.
     private String lookForAWord(Direction direction) {
         checkedPoints = new ArrayList<>();
         StringBuilder cumulatingWord = new StringBuilder();
@@ -70,11 +81,12 @@ public class PuzzleSolver {
             cumulatingWord.append(loadedPuzzleGrid.getLetterAt(point));
         }
 
-        // fence post issue
+        // fence post correction
         checkedPoints.remove(checkedPoints.size() - 1);
         return cumulatingWord.deleteCharAt(cumulatingWord.length() - 1).toString();
     }
 
+    // Select a new point for each search moving from left to right and then down to the next row.
     private void selectAPoint() {
         if (startingPoint.getX() + 1 < loadedPuzzleGrid.RowSize(startingPoint.getY())) {
             startingPoint = new Point(startingPoint.getX() + 1, startingPoint.getY());
@@ -88,7 +100,7 @@ public class PuzzleSolver {
 
     public void outputSolution() {
         try{
-            PrintWriter writer = new PrintWriter("FoundWords.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("Solution.txt", "UTF-8");
             StringBuilder line = new StringBuilder();
 
             for (String word: foundWords.keySet()) {
@@ -107,7 +119,7 @@ public class PuzzleSolver {
 
     public void outputAnswerGrid() {
         try {
-            PrintWriter writer = new PrintWriter("PuzzleWords.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("AnswerGrid.txt", "UTF-8");
             Grid answerGrid = createAnswerGrid();
             for (int i = 0; i < answerGrid.ColSize(); i++) {
                 writer.println(answerGrid.getRow(i));
